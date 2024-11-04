@@ -9,7 +9,7 @@ import utils.Constant;
 import utils.Sounds;
 import utils.Utils;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -40,7 +40,7 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     public GamePanel(Data data, Boolean sound){
         this.sound = sound;
         this.data = data;
-        this.levelQuantity = Utils.getLevelQuantity();
+        this.levelQuantity = 5;
         this.level = this.data.getLevel() + 1;
         init(this.level);
         this.addMouseListener(this);
@@ -54,6 +54,9 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     private void init(int level){
+        if (level > 5) {
+            level = 5; // Cap the level at 5
+        }
         TubeDAO tubeDAO = new TubeDAO(level);
         this.tubeList = tubeDAO.getTubeList();
         this.undo = new LinkedList<>();
@@ -125,10 +128,25 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     public void nextLevel() {
-        this.level++;
-        init(this.level);
-        repaint();
+        // Optionally, handle what happens when the last level is completed
+        if (this.level < 5) {  // Check if current level is less than 5
+            this.level++;
+            init(this.level);
+            repaint();
+    } else {
+            endGame(); // Add a method to handle game completion
+            }
+}
+
+    private void endGame() {
+        // Here you can implement the logic for ending the game
+        // For example, show a message dialog or reset the game
+        JOptionPane.showMessageDialog(this, "Congratulations! You've completed all levels!");
+
+        // Optionally reset the game or go back to level selection
+        reset(); // You can call reset() to restart the game
     }
+
 
     public void preLevel() {
         if (this.level > 1){
