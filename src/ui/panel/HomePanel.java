@@ -3,7 +3,6 @@ package ui.panel;
 import DAO.DataDAO;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
-import ui.dialog.AboutDialog;
 import ui.dialog.EditNameDialog;
 import ui.dialog.LoadGameDialog;
 import utils.Constant;
@@ -25,7 +24,6 @@ public class HomePanel extends JPanel {
     private JLabel btnNewGame;
     private EditNameDialog editNameDialog;
     private LoadGameDialog loadGameDialog;
-    private AboutDialog aboutDialog;
     private Boolean sound;
     private DataDAO dataDAO;
     public HomePanel(Boolean sound, DataDAO dataDAO) {
@@ -41,7 +39,6 @@ public class HomePanel extends JPanel {
         btnExit = new JLabel();
         btnNewGame = new JLabel();
         bgHome = new JLabel();
-        aboutDialog = new AboutDialog(this.sound);
         editNameDialog = new EditNameDialog(this.sound, this.dataDAO);
         loadGameDialog = new LoadGameDialog(this.sound, this.dataDAO);
 
@@ -50,7 +47,6 @@ public class HomePanel extends JPanel {
 
         add(editNameDialog, new AbsoluteConstraints(0, 0, 1366, 768));
         add(loadGameDialog, new AbsoluteConstraints(0, 0, 1366, 768));
-        add(aboutDialog, new AbsoluteConstraints(0, 0, 1366, 768));
 
         btnLoadGame.setIcon(new ImageIcon(Constant.DRAWABLE_PATH + "btn_load_game.png"));
         add(btnLoadGame, new AbsoluteConstraints(1130, 510, -1, -1));
@@ -59,16 +55,6 @@ public class HomePanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 Sounds.buttonSound(sound);
                 openLoadGame();
-            }
-        });
-
-        btnAbout.setIcon(new ImageIcon(Constant.DRAWABLE_PATH + "btn_about.png"));
-        add(btnAbout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 590, -1, -1));
-        btnAbout.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Sounds.buttonSound(sound);
-                openAboutDialog();
             }
         });
 
@@ -107,6 +93,5 @@ public class HomePanel extends JPanel {
         System.exit(1);
     }
     public void openAboutDialog(){
-        aboutDialog.open();
     }
 }
