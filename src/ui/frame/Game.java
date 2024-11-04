@@ -30,7 +30,7 @@ public class Game extends JFrame {
         this.dataDAO = new DataDAO();
         this.sound = sound;
         initComponent();
-        setTitle("Block Sort Puzzle by QTT");
+        setTitle("COLOR CASCADE");
         if (this.sound){
             onSound();
         }else {

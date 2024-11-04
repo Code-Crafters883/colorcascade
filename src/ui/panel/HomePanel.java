@@ -18,7 +18,6 @@ import java.awt.event.MouseEvent;
 public class HomePanel extends JPanel {
 
     private JLabel bgHome;
-    private JLabel btnAbout;
     private JLabel btnExit;
     private JLabel btnLoadGame;
     private JLabel btnNewGame;
@@ -35,7 +34,6 @@ public class HomePanel extends JPanel {
     private void initComponents() {
 
         btnLoadGame = new JLabel();
-        btnAbout = new JLabel();
         btnExit = new JLabel();
         btnNewGame = new JLabel();
         bgHome = new JLabel();

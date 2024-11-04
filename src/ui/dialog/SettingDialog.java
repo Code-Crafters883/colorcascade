@@ -19,13 +19,11 @@ public class SettingDialog extends JPanel {
 
     private JLabel bgSetting;
     private JLabel btnClose;
-    private JLabel btnHelp;
     private JLabel btnMute;
     private JLabel btnQuit;
     private JLabel btnSound;
     private Game gameParent;
     private Boolean sound;
-    private HelpDialog helpDialog;
 
 
     public SettingDialog(Boolean sound) {
@@ -38,17 +36,15 @@ public class SettingDialog extends JPanel {
     private void initComponents() {
 
         btnQuit = new JLabel();
-        btnHelp = new JLabel();
         btnSound = new JLabel();
         btnMute = new JLabel();
         btnClose = new JLabel();
         bgSetting = new JLabel();
-        helpDialog = new HelpDialog(this.sound);
+
 
         setPreferredSize(new java.awt.Dimension(1366, 768));
         setLayout(new AbsoluteLayout());
 
-        add(helpDialog, new AbsoluteConstraints(0, 0, 1366, 768));
         btnQuit.setIcon(new ImageIcon(Constant.DRAWABLE_PATH + "btn_quit.png"));
 
         add(btnQuit, new AbsoluteConstraints(550, 530, -1, -1));
@@ -60,15 +56,6 @@ public class SettingDialog extends JPanel {
             }
         });
 
-        btnHelp.setIcon(new ImageIcon(Constant.DRAWABLE_PATH + "btn_help.png"));
-        add(btnHelp, new AbsoluteConstraints(550, 390, -1, -1));
-        btnHelp.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Sounds.buttonSound(sound);
-                helpClickListener();
-            }
-        });
 
         btnSound.setIcon(new ImageIcon(Constant.DRAWABLE_PATH + "btn_sound.png"));
         add(btnSound, new AbsoluteConstraints(550, 250, -1, -1));
@@ -130,9 +117,6 @@ public class SettingDialog extends JPanel {
 
     public void quitClickListener(){
         System.exit(1);
-    }
-    public void helpClickListener(){
-        helpDialog.open();
     }
 
     public void onSound(){
