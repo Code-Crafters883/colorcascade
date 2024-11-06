@@ -11,15 +11,13 @@ import utils.Utils;
 
 import javax.swing.*;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.List;
+
+import static utils.Constant.FONT_PATH;
 
 public class GamePanel extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -28,7 +26,6 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     private boolean isDrag = false;
     private Block top;
     private double ax, ay, width, height;
-    private int level;
     private int moveCount;
     public int levelQuantity;
     private int tubePop;
@@ -36,17 +33,75 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     private static final int undoSize = 5;
     private Data data;
     private Boolean sound;
+    private int level = 1; // Starting at level 1
+    private static final int INITIAL_TIME = 10; // Starting time for level 1 in seconds
+    private static final int TIME_INCREMENT = 5; // Time increment for each level
+
+    // Timer and display fields
+    private int timeLeft = INITIAL_TIME;
+    private Timer timer;
+    private JLabel timerLabel; // To display the time remaining
+    private JLabel levelLabel; // To display the current level
 
     public GamePanel(Data data, Boolean sound){
         this.sound = sound;
         this.data = data;
         this.levelQuantity = 5;
         this.level = this.data.getLevel() + 1;
+        timeLeft = INITIAL_TIME + (this.level - 1) * TIME_INCREMENT; // Set time based on level
         init(this.level);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.setOpaque(false);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        // Timer label setup
+        timerLabel = new JLabel("Time: " + timeLeft + "s");
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        timerLabel.setForeground(Color.YELLOW); // Customize to match your UI
+        timerLabel.setAlignmentX(CENTER_ALIGNMENT); // Center align timer label
+
+        this.add(Box.createVerticalStrut(10)); // Adds fixed vertical space between labels
+        this.add(timerLabel);
+        this.add(Box.createVerticalGlue()); // Adds flexible space below
+
+        // Timer functionality
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeLeft--;
+                timerLabel.setText("Time: " + timeLeft + "s");
+
+                if (timeLeft <= 0) {
+                    timer.stop();
+                    handleTimeOut();
+                }
+            }
+        });
+
+        timer.start(); // Start the timer based on the loaded level
     }
+
+    public void startNewLevel() {
+        // Only update the level and time if you're actually starting a new level
+        timeLeft = INITIAL_TIME + (level - 1) * TIME_INCREMENT; // Reset and increase time for the next level
+        timerLabel.setText("Time: " + timeLeft + "s");
+
+        // Restart the timer for the new level
+        if (!timer.isRunning()) {
+            timer.restart();
+        }
+    }
+
+
+    private void handleTimeOut() {
+        JOptionPane.showMessageDialog(this, "Time's up! Restarting level " + level);
+        init(this.level); // Restart the same level
+        timeLeft = INITIAL_TIME + (level - 1) * TIME_INCREMENT;
+        timerLabel.setText("Time: " + timeLeft + "s");
+        timer.restart();
+    }
+
 
 
     public int getLevel(){
@@ -113,14 +168,25 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
         return -1;
     }
 
-    public boolean isCompleteGame(){
-        for (Tube tube: this.tubeList){
-            if (!tube.isHomogenous()){
+    public boolean isCompleteGame() {
+        for (Tube tube : this.tubeList) {
+            if (!tube.isHomogenous()) {
                 return false;
             }
         }
+
+        // Stop the timer when the game is completed
+        if (timer.isRunning()) {
+            timer.stop();
+        }
+
+        // Move to the next level if completed
+        nextLevel();
+
         return true;
     }
+
+
 
     public void reset(){
         init(this.level);
@@ -128,25 +194,31 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     public void nextLevel() {
-        // Optionally, handle what happens when the last level is completed
-        if (this.level < 5) {  // Check if current level is less than 5
+        if (this.level < 5) {
             this.level++;
             init(this.level);
             repaint();
-    } else {
-            endGame(); // Add a method to handle game completion
-            }
-}
-
-    private void endGame() {
-        // Here you can implement the logic for ending the game
-        // For example, show a message dialog or reset the game
-        JOptionPane.showMessageDialog(this, "Congratulations! You've completed all levels!");
-
-        // Optionally reset the game or go back to level selection
-        reset(); // You can call reset() to restart the game
+            timer.stop();  // Stop the timer when moving to the next level
+            startNewLevel();  // Reset the timer and start the new level
+        } else {
+            endGame(); // End the game if it's the last level
+        }
     }
 
+
+    private void endGame() {
+        int choice = JOptionPane.showOptionDialog(this, "Congratulations! You've completed all levels!",
+                "Game Over", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE, null,
+                new Object[]{"Restart", "Exit"}, "Restart");
+        if (choice == 0) {
+            level = 1;
+            startNewLevel(); // Restart the game
+        } else {
+            timer.stop(); // Stop the timer when the game exits
+            System.exit(0); // Exit the game
+        }
+    }
 
     public void preLevel() {
         if (this.level > 1){
