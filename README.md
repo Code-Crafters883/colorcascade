@@ -1,9 +1,9 @@
-# Block Sort Puzzle
+# Color Cascade
 
 ## Introduce
-**Block Sort Puzzle** is a fun and addictive puzzle game!Try to sort the colored block in the tubes until all colors in the same tube. A challenging yet relaxing game to exercise your brain!
+**Color Cascade** is a fun and addictive puzzle game!Try to sort the colored block in the tubes until all colors in the same tube. A challenging yet relaxing game to exercise your brain!
 
-Now, the game has **100 levels** with different difficulty levels in each level.
+The game has **5 levels** with different difficulty levels in each level.
 
 ## How to play
 * Drag and drop any block at the top of the tube to another tube. 
@@ -15,7 +15,7 @@ Now, the game has **100 levels** with different difficulty levels in each level.
 * Multiple unique level.
 * FREE & EASY TO PLAY.
 * Save your own data after each level.
-* NO penalties & time limits; you can enjoy Water Sort Puzzle at your own pace!
+* Time limits; you can enjoy Color Cascade at your own pace!
 * Give a solution.
 
 ## Data Structure
@@ -28,7 +28,7 @@ Now, the game has **100 levels** with different difficulty levels in each level.
 
 ### Home Screen
 
-![](image/1.png)
+![](image/1.jpg)
 
 #### New Game
 
@@ -50,8 +50,6 @@ Now, the game has **100 levels** with different difficulty levels in each level.
 
 ![](image/6.png)
 
-## Need help? Have any question?
-**Support email: quannv.dev@gmail.com**
 
 ## Directory Structure
 

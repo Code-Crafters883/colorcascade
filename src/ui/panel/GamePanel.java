@@ -93,16 +93,10 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
         }
     }
 
-
     private void handleTimeOut() {
         JOptionPane.showMessageDialog(this, "Time's up! Restarting level " + level);
-        init(this.level); // Restart the same level
-        timeLeft = INITIAL_TIME + (level - 1) * TIME_INCREMENT;
-        timerLabel.setText("Time: " + timeLeft + "s");
-        timer.restart();
+        restartLevel(); // Restart the level with a unified reset method
     }
-
-
 
     public int getLevel(){
         return this.level;
@@ -175,33 +169,43 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
             }
         }
 
-        // Stop the timer when the game is completed
+        // Stop the timer if the game is completed
         if (timer.isRunning()) {
             timer.stop();
         }
 
-        // Move to the next level if completed
-        nextLevel();
-
         return true;
     }
 
+    public void reset() {
+        restartLevel(); // Reuse the restart logic for manual reset as well
+    }
 
+    private void restartLevel() {
+        // Stop any existing timer instance before resetting
+        if (timer.isRunning()) {
+            timer.stop();
+        }
+        init(this.level);  // Re-initialize game state for the current level
+        timeLeft = INITIAL_TIME + (this.level - 1) * TIME_INCREMENT; // Reset time for the level
+        timerLabel.setText("Time: " + timeLeft + "s"); // Update timer label
 
-    public void reset(){
-        init(this.level);
+        // Restart the timer for a fresh start on the current level
+        timer.restart();
         repaint();
     }
 
     public void nextLevel() {
-        if (this.level < 5) {
-            this.level++;
-            init(this.level);
-            repaint();
-            timer.stop();  // Stop the timer when moving to the next level
-            startNewLevel();  // Reset the timer and start the new level
-        } else {
-            endGame(); // End the game if it's the last level
+        if (isCompleteGame()) { // Ensure game completion triggers the level increment
+            if (this.level < levelQuantity) { // Level quantity is limited to 5
+                this.level++;
+                init(this.level); // Initialize for the new level
+                repaint();
+                timer.stop();  // Stop the timer before moving to the next level
+                startNewLevel();  // Reset and start the timer for the new level
+            } else {
+                endGame(); // End the game if it's the last level
+            }
         }
     }
 
